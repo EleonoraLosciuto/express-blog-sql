@@ -22,9 +22,8 @@ export const index = async (req, res) => {
 
 
 //SHOW
-export const show = (req, res) => {
+export const show = async (req, res) => {
     let id = Number(req.params.id);
-    let post = posts.find((post) => post.id === id);
 
     // check su request id: se NaN return status 400
     if (isNaN(id)) {
@@ -35,8 +34,12 @@ export const show = (req, res) => {
         return
     }
 
-    // check: se ricerca non va a buon fine return status 404
-    if (!post) {
+    const sql = 'SELECT * FROM posts p WHERE p.id = ?';
+
+    const [[result]] = await connection.query(sql, [id])
+
+    // check: se parametro é tecnicamente corretto (numero) ma post non trovato
+    if (result === undefined) {
         res.status(404).json({
             status: "not found",
             message: "post non trovato"
@@ -45,7 +48,7 @@ export const show = (req, res) => {
     }
 
     // se ricerca va a buon fine
-    res.json(post);
+    res.json(result);
 };
 
 
