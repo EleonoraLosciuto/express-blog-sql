@@ -1,0 +1,16 @@
+{
+  "name": "express-blog-intro",
+  "version": "1.0.0",
+  "description": "This is a blog created with express and node",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mysql2": "^3.24.4",
+    "sql2": "^0.0.1"
+  }
+}
