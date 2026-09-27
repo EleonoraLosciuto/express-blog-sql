@@ -53,9 +53,11 @@ export const show = async (req, res) => {
 
 
 //CREATE
-export const create = (req, res) => {
+export const create = async (req, res) => {
 
-    if (!req.body.title || !req.body.img_src || !req.body.content || !req.body.tags) {
+    const { title, content, image } = req.body;
+
+    if (!title || !content || !image) {
         res.status(400).json({
             "status": "bad request",
             "message": "il post è incompleto o inesistente, impossibile creare nuovo post"
@@ -63,20 +65,18 @@ export const create = (req, res) => {
         return
     }
 
-    const createID = posts[posts.length - 1].id + 1;
 
-    const createPost = {
-        id: createID,
-        title: req.body.title,
-        img_src: req.body.img_src,
-        content: req.body.content,
-        tags: req.body.tags,
+    const sql = 'insert into posts (title, content, image) values (?, ?, ?)';
 
-    }
+    const [results] = await connection.query(sql, [title, content, image]);
 
-    posts.push(createPost);
-    res.status(201).send(createPost);
-}
+    res.json({
+        id: results.insertId,
+        title,
+        content,
+        image
+    })
+};
 
 
 // UPDATE
